@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MY TVET Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Reset & Base ─────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #F0F4FF;
+      color: #1a1a2e;
+      min-height: 100vh;
+    }
+
+    /* ── Header ───────────────────────────────────────────── */
+    header {
+      background: #001A66;
+      color: #fff;
+      padding: 22px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    header .header__title {
+      font-size: 1.9rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    header .header__sub {
+      font-size: 0.85rem;
+      font-weight: 400;
+      opacity: 0.7;
+      margin-top: 2px;
+    }
+    header .header__date {
+      font-size: 0.8rem;
+      font-weight: 600;
+      background: rgba(255,255,255,0.12);
+      padding: 6px 14px;
+      border-radius: 20px;
+    }
+
+    /* ── Main ─────────────────────────────────────────────── */
+    main {
+      max-width: 1100px;
+      margin: 36px auto;
+      padding: 0 24px 60px;
+    }
+
+    /* ── Cards Grid ───────────────────────────────────────── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-bottom: 36px;
+    }
+
+    .card {
+      border-radius: 16px;
+      padding: 28px 24px;
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+    }
+    .card::after {
+      content: '';
+      position: absolute;
+      top: -30px; right: -30px;
+      width: 120px; height: 120px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 50%;
+    }
+    .card--blue   { background: #0057FF; }
+    .card--orange { background: #FF6B00; }
+    .card--deepblue { background: #0039B3; }
+
+    .card__icon   { font-size: 1.8rem; margin-bottom: 8px; display: block; }
+    .card__label  { font-size: 0.78rem; font-weight: 600; text-transform: uppercase;
+                    letter-spacing: 1px; opacity: 0.85; }
+    .card__number { font-size: 3rem; font-weight: 800; line-height: 1.1;
+                    display: block; margin: 6px 0 12px; }
+    .card__stats  { font-size: 0.82rem; opacity: 0.9; line-height: 1.8; }
+
+    /* Progress bar */
+    .progress-track {
+      background: rgba(255,255,255,0.25);
+      border-radius: 8px;
+      height: 8px;
+      margin-top: 10px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      background: #fff;
+      height: 100%;
+      border-radius: 8px;
+      transition: width 0.4s ease;
+    }
+    .progress-label {
+      font-size: 0.75rem;
+      opacity: 0.85;
+      margin-top: 6px;
+    }
+
+    /* Badge */
+    .badge {
+      display: inline-block;
+      padding: 3px 14px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin: 8px 0;
+    }
+    .badge--ontrack { background: #22c55e; color: #fff; }
+    .badge--atrisk  { background: #ef4444; color: #fff; }
+
+    .card__countdown { font-size: 0.82rem; opacity: 0.9; margin-top: 4px; }
+
+    /* ── Section headings ─────────────────────────────────── */
+    .section-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: #001A66;
+      border-left: 4px solid #0057FF;
+      padding-left: 10px;
+    }
+
+    /* ── Checklist ────────────────────────────────────────── */
+    .checklist {
+      background: #fff;
+      border-radius: 14px;
+      padding: 24px 28px;
+      margin-bottom: 28px;
+      box-shadow: 0 2px 12px rgba(0,87,255,0.07);
+    }
+    .checklist__list { list-style: none; }
+    .checklist__item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid #f0f0f0;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .checklist__item:last-child { border-bottom: none; }
+    .checklist__item input[type="checkbox"] {
+      width: 18px; height: 18px;
+      accent-color: #0057FF;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .checklist__item--done {
+      text-decoration: line-through;
+      opacity: 0.45;
+    }
+
+    /* ── Tables ───────────────────────────────────────────── */
+    .table-section {
+      background: #fff;
+      border-radius: 14px;
+      padding: 24px 28px;
+      margin-bottom: 28px;
+      box-shadow: 0 2px 12px rgba(0,87,255,0.07);
+      overflow-x: auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+    thead tr {
+      background: #0057FF;
+      color: #fff;
+    }
+    thead th {
+      padding: 12px 14px;
+      text-align: left;
+      font-weight: 700;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    tbody tr:nth-child(even) { background: #f5f8ff; }
+    tbody tr:hover { background: #e8effe; }
+    tbody td {
+      padding: 11px 14px;
+      color: #222;
+      font-weight: 500;
+    }
+
+    /* Status chips */
+    .chip {
+      display: inline-block;
+      padding: 2px 12px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+    .chip--confirmed  { background: #dcfce7; color: #15803d; }
+    .chip--waitlisted { background: #fef9c3; color: #92400e; }
+    .chip--ready      { background: #dcfce7; color: #15803d; }
+    .chip--pending    { background: #fef9c3; color: #92400e; }
+
+    /* ── Responsive ───────────────────────────────────────── */
+    @media (max-width: 768px) {
+      .cards-grid { grid-template-columns: 1fr; }
+      header { flex-direction: column; align-items: flex-start; gap: 10px; }
+      main { padding: 0 14px 40px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div>
+      <div class="header__title">MY TVET Dashboard</div>
+      <div class="header__sub">Workshop Management Portal</div>
+    </div>
+    <div class="header__date" id="headerDate"></div>
+  </header>
+
+  <main>
+
+    <!-- ── Cards ─────────────────────────────────────────── -->
+    <div class="cards-grid">
+
+      <!-- Card 1: Students Registered -->
+      <section class="card card--blue">
+        <span class="card__icon">🎓</span>
+        <span class="card__label">Students Registered</span>
+        <span class="card__number" id="cardStudentsTotal">48</span>
+        <div class="card__stats" id="cardStudentsStats">
+          ✔ Confirmed: 40<br>⏳ Waitlisted: 8
+        </div>
+      </section>
+
+      <!-- Card 2: Tasks Remaining -->
+      <section class="card card--orange">
+        <span class="card__icon">✅</span>
+        <span class="card__label">Tasks Remaining</span>
+        <span class="card__number" id="cardTasksRemaining">3</span>
+        <div class="progress-track">
+          <div class="progress-fill" id="progressFill" style="width:0%"></div>
+        </div>
+        <div class="progress-label" id="progressLabel"></div>
+      </section>
+
+      <!-- Card 3: Workshop Status -->
+      <section class="card card--deepblue">
+        <span class="card__icon">🏫</span>
+        <span class="card__label">Workshop Status</span>
+        <span class="badge" id="statusBadge"></span>
+        <div class="card__countdown" id="cardCountdown"></div>
+      </section>
+
+    </div>
+
+    <!-- ── Preparation Checklist ──────────────────────────── -->
+    <section class="checklist">
+      <h2 class="section-title">📋 Preparation Checklist</h2>
+      <ul class="checklist__list" id="checklistEl"></ul>
+    </section>
+
+    <!-- ── Students Table ─────────────────────────────────── -->
+    <section class="table-section">
+      <h2 class="section-title">👩‍🎓 Registered Students</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>#</th><th>Name</th><th>Reg No.</th><th>Status</th><th>Group</th>
+          </tr>
+        </thead>
+        <tbody id="studentsTableBody"></tbody>
+      </table>
+    </section>
+
+    <!-- ── Facilitators Table ─────────────────────────────── -->
+    <section class="table-section">
+      <h2 class="section-title">🧑‍🏫 Facilitators</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>#</th><th>Name</th><th>Role</th><th>Session</th><th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="facilitatorsTableBody"></tbody>
+      </table>
+    </section>
+
+  </main>
+
+  <script>
+    /* ── Sample Data ─────────────────────────────────────── */
+    const DATA = {
+      students: {
+        total: 48,
+        confirmed: 40,
+        waitlisted: 8,
+        list: [
+          { name: "Amara Dlamini",   reg: "T2024-001", status: "Confirmed",  group: "A" },
+          { name: "Bongani Khumalo", reg: "T2024-002", status: "Confirmed",  group: "A" },
+          { name: "Celeste Mokoena", reg: "T2024-003", status: "Confirmed",  group: "B" },
+          { name: "Derick Nkosi",    reg: "T2024-004", status: "Waitlisted", group: "-" },
+          { name: "Emeka Okafor",    reg: "T2024-005", status: "Confirmed",  group: "B" },
+          { name: "Fatima Patel",    reg: "T2024-006", status: "Confirmed",  group: "C" },
+          { name: "Gift Sibande",    reg: "T2024-007", status: "Confirmed",  group: "C" },
+          { name: "Hlengiwe Zulu",   reg: "T2024-008", status: "Waitlisted", group: "-" },
+          { name: "Ivan Ferreira",   reg: "T2024-009", status: "Confirmed",  group: "A" },
+          { name: "Joy Mahlangu",    reg: "T2024-010", status: "Confirmed",  group: "B" }
+        ]
+      },
+      tasks: {
+        items: [
+          { label: "Send confirmation emails",   done: true  },
+          { label: "Reserve lab room",           done: true  },
+          { label: "Print handouts",             done: true  },
+          { label: "Install workshop software",  done: true  },
+          { label: "Prepare attendance sheet",   done: true  },
+          { label: "Brief all facilitators",     done: false },
+          { label: "Test all demo exercises",    done: false },
+          { label: "Set up feedback form",       done: false }
+        ]
+      },
+      workshop: {
+        status: "On Track",
+        daysRemaining: 7
+      },
+      facilitators: [
+        { name: "Mr. T. Ndlovu",  role: "Lead Instructor", session: "Opening & Demo",        status: "Ready"   },
+        { name: "Ms. P. Sithole", role: "Facilitator",     session: "Group A Lab Work",      status: "Ready"   },
+        { name: "Mr. K. Moagi",   role: "Facilitator",     session: "Group B Lab Work",      status: "Pending" },
+        { name: "Ms. R. Adams",   role: "Facilitator",     session: "Group C Lab Work",      status: "Ready"   },
+        { name: "Mr. S. Langa",   role: "IT Support",      session: "All Sessions Support",  status: "Ready"   }
+      ]
+    };
+
+    /* ── Header Date ─────────────────────────────────────── */
+    document.getElementById('headerDate').textContent =
+      new Date().toLocaleDateString('en-ZA', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' });
+
+    /* ── Render Cards ────────────────────────────────────── */
+    function renderCards() {
+      const items = DATA.tasks.items;
+      const total = items.length;
+      const done  = items.filter(i => i.done).length;
+      const remaining = total - done;
+      const pct = Math.round((done / total) * 100);
+
+      document.getElementById('cardTasksRemaining').textContent = remaining;
+      document.getElementById('progressFill').style.width = pct + '%';
+      document.getElementById('progressLabel').textContent = pct + '% complete (' + done + ' of ' + total + ' done)';
+
+      const badge = document.getElementById('statusBadge');
+      badge.textContent = DATA.workshop.status;
+      badge.className = 'badge ' + (DATA.workshop.status === 'On Track' ? 'badge--ontrack' : 'badge--atrisk');
+
+      document.getElementById('cardCountdown').textContent =
+        '⏱ ' + DATA.workshop.daysRemaining + ' days to go';
+    }
+
+    /* ── Render Checklist ────────────────────────────────── */
+    function renderChecklist() {
+      const ul = document.getElementById('checklistEl');
+      ul.innerHTML = '';
+      DATA.tasks.items.forEach((item, idx) => {
+        const li = document.createElement('li');
+        li.className = 'checklist__item' + (item.done ? ' checklist__item--done' : '');
+
+        const cb = document.createElement('input');
+        cb.type = 'checkbox';
+        cb.checked = item.done;
+        cb.addEventListener('change', () => {
+          DATA.tasks.items[idx].done = cb.checked;
+          li.classList.toggle('checklist__item--done', cb.checked);
+          renderCards();
+        });
+
+        const label = document.createElement('span');
+        label.textContent = item.label;
+
+        li.appendChild(cb);
+        li.appendChild(label);
+        ul.appendChild(li);
+      });
+    }
+
+    /* ── Render Students Table ───────────────────────────── */
+    function renderStudentsTable() {
+      const tbody = document.getElementById('studentsTableBody');
+      DATA.students.list.forEach((s, i) => {
+        const chipClass = s.status === 'Confirmed' ? 'chip chip--confirmed' : 'chip chip--waitlisted';
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${i + 1}</td>
+          <td>${s.name}</td>
+          <td>${s.reg}</td>
+          <td><span class="${chipClass}">${s.status}</span></td>
+          <td>${s.group}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    /* ── Render Facilitators Table ───────────────────────── */
+    function renderFacilitatorsTable() {
+      const tbody = document.getElementById('facilitatorsTableBody');
+      DATA.facilitators.forEach((f, i) => {
+        const chipClass = f.status === 'Ready' ? 'chip chip--ready' : 'chip chip--pending';
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${i + 1}</td>
+          <td>${f.name}</td>
+          <td>${f.role}</td>
+          <td>${f.session}</td>
+          <td><span class="${chipClass}">${f.status}</span></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    /* ── Init ────────────────────────────────────────────── */
+    renderCards();
+    renderChecklist();
+    renderStudentsTable();
+    renderFacilitatorsTable();
+  </script>
+
+</body>
+</html>
